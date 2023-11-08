@@ -10,6 +10,7 @@ import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createIssueSchema } from "@/app/validation-schemas";
 import { z } from "zod";
+import ErrorMessage from "@/app/components/error-message";
 
 type IssueForm = z.infer<typeof createIssueSchema>; //========>changing interface based on schema
 
@@ -46,15 +47,17 @@ export default function NewIssuePage() {
         <TextField.Root>
           <TextField.Input placeholder="Title" {...register("title")} />
         </TextField.Root>
-        {errors.title && <Text color="red" as="p">{errors.title.message}</Text>}
+        {/* ===> Instead of using ternary or  && oparation to display error we used optional */}
+        <ErrorMessage>{errors.title?.message}</ErrorMessage>
+
         <Controller
           name="description"
           control={control}
           render={({ field }) => <SimpleMDE {...field} />}
         />
-        {errors.description && (
-          <Text color="red" as="p">{errors.description.message}</Text>
-        )}
+        {/* ===> Instead of using ternary or  && oparation to display error we used optional */}
+
+        <ErrorMessage>{errors.description?.message}</ErrorMessage>
 
         <Button>Submit New Issue</Button>
       </form>
