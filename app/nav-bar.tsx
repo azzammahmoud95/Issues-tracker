@@ -1,5 +1,6 @@
 "use client";
 
+import { signOut } from "next-auth/react";
 import Skeleton  from "@/app/components/Skeleton";
 import React from "react";
 import Link from "next/link";
@@ -10,6 +11,7 @@ import { useSession } from "next-auth/react";
 import {
   Avatar,
   Box,
+  Button,
   Container,
   DropdownMenu,
   Flex,
@@ -26,9 +28,8 @@ const NavBar = () => {
             </Link>
             <NavLinks />
           </Flex>
-          {/* <AuthStatus /> */}
-          <Box>s</Box>
-          {/* //TODO: just to test */}
+          <AuthStatus />
+          {/* <p>s</p> */}
         </Flex>
       {/* </Container> */}
     </nav>
@@ -64,10 +65,10 @@ const NavLinks = () => {
 
 const AuthStatus = () => {
   const { status, data: session } = useSession();
-
+console.log("sesssion",session?.user?.email)
   if (status === "loading") return <Skeleton width="3rem" />;
 
-  if (status === "unauthenticated")
+  if (status === "unauthenticated" || typeof session === "undefined")
     return (
       <Link className="nav-link" href="/api/auth/signin">
         Login
@@ -89,10 +90,10 @@ const AuthStatus = () => {
         </DropdownMenu.Trigger>
         <DropdownMenu.Content>
           <DropdownMenu.Label>
-            <Text size="2">{session!.user!.email}</Text>
+            <Text size="2">{`${session!.user!.email}`}</Text>
           </DropdownMenu.Label>
           <DropdownMenu.Item>
-            <Link href="/api/auth/signout">Log out</Link>
+            <Button onClick={() =>signOut()}>Log out</Button>
           </DropdownMenu.Item>
         </DropdownMenu.Content>
       </DropdownMenu.Root>

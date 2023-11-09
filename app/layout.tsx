@@ -5,7 +5,7 @@ import { Inter } from "next/font/google";
 import Navbar from "./nav-bar";
 import { Theme, ThemePanel } from "@radix-ui/themes";
 import QueryClientProvider from "./context/query-client-provider";
-import AuthProvider from "./auth/providers";
+import AuthProvider from "./context/Provider";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
