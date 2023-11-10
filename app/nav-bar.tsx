@@ -92,9 +92,9 @@ console.log("sesssion",session?.user?.email)
           <DropdownMenu.Label>
             <Text size="2">{`${session!.user!.email}`}</Text>
           </DropdownMenu.Label>
-          <DropdownMenu.Item>
-            <Button onClick={() =>signOut()}>Log out</Button>
-          </DropdownMenu.Item>
+          {/* <DropdownMenu.Item> */}
+            <Button className="w-full" onClick={() =>signOut()}>Log out</Button>
+          {/* </DropdownMenu.Item> */}
         </DropdownMenu.Content>
       </DropdownMenu.Root>
     </Box>

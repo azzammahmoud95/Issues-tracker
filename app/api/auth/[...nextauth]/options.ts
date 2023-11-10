@@ -56,6 +56,14 @@ debug: true,
       return randomUUID?.() ?? randomBytes(32).toString("hex");
     },
   },
+  // callbacks:{
+  //   async session({ session, token }) {
+     
+
+  //     return session
+  //   }
+
+  // }
 };
 
 // async function sendRequest({ identifier, url, provider }: SendVerificationRequestParams) {
