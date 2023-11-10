@@ -7,7 +7,6 @@ import GoogleProvider from "next-auth/providers/google";
 import { randomBytes, randomUUID } from "crypto";
 import nodemailer from "nodemailer";
 import EmailProvider from "next-auth/providers/email";
-import { createTransport } from "nodemailer";
 import { CustomsendVerificationRequest } from "./signinemail";
 interface SendVerificationRequestParams {
     identifier: string;
@@ -28,44 +27,24 @@ export const options: NextAuthOptions = {
       checks: ["none"],
     }),
     EmailProvider({
-        server: {
-        service: 'gmail',
-          host: 'smtp.gmail.com',
-          port: 465,
-          secure: true,
-          auth: {
-            user: 'azzammahmoudtest@gmail.com',
-            pass: 'Test@12345',
-          },
-        },
-        from: process.env.EMAIL_FROM,
-        sendVerificationRequest({ identifier, url, provider }) {
-        //   CustomsendVerificationRequest({ identifier, url, provider })
-        async function sendRequest({identifier,url,provider} : any)  {
-            const transport = createTransport(provider.server)
-            const result = await transport.sendMail({
-              to: identifier,
-              from: provider.from,
-              subject: `Sign in to`,
-              text: `Sign in to`,
-              html: ` <!DOCTYPE html>
-              <html lang="en" xmlns:v="urn:schemas-microsoft-com:vml">
-              <head>
-                <meta charset="utf-8">
-                <meta name="x-apple-disable-message-reformatting">
-                <meta http-equiv="x-ua-compatible" content="ie=edge">
-                <meta name="viewport" content="width=device-width, initial-scale=1">
-                <meta name="format-detection" content="telephone=no, date=no, address=no, email=no">
-                <meta name="color-scheme" content="light dark">
-                <meta name="supported-color-schemes" content="light dark">
-                <!--[if mso]> </head>
-                <body>Hello From Email</body>`,  
-            })
-             
+      server: {
+        host: process.env.EMAIL_SERVER_HOST,
+        port: 587,
+        secure: false,
+        auth: {
+          user: process.env.EMAIL_SERVER_USER,
+          pass: process.env.EMAIL_SERVER_PASSWORD
         }
-        sendRequest({identifier,url,provider})
-        },
-      }),
+      },
+      from: process.env.EMAIL_FROM,
+      // server: 'smtp://azzammahmoudtest@gmail.com:Test@12345@smtp.gmail.com:587',
+      // from: 'azzammahmoudtest@gmail.com',
+      
+      sendVerificationRequest({ identifier, url, provider,theme }) {
+        // console.log('helloooooooooo',{identifier,url,provider})
+        CustomsendVerificationRequest({ identifier, url, provider });
+      },
+    }),
   ],
   
 debug: true,
@@ -79,7 +58,43 @@ debug: true,
   },
 };
 
+// async function sendRequest({ identifier, url, provider }: SendVerificationRequestParams) {
+//   const transport = createTransport(provider.server);
+//     CustomsendVerificationRequest({
+//       identifier: email,
+//       url,
+//       provider: { server, from },
+//     }){
 
+//     }
+//   //   const result = await transport.sendMail({
+//   //     to: identifier,
+//   //     from: provider.from,
+//   //     subject: "Sign in to",
+//   //     text: "Sign in to",
+//   //     html: `
+//   //       <!DOCTYPE html>
+//   //       <html lang="en" xmlns:v="urn:schemas-microsoft-com:vml">
+//   //       <head>
+//   //         <meta charset="utf-8">
+//   //         <meta name="x-apple-disable-message-reformatting">
+//   //         <meta http-equiv="x-ua-compatible" content="ie=edge">
+//   //         <meta name="viewport" content="width=device-width, initial-scale=1">
+//   //         <meta name="format-detection" content="telephone=no, date=no, address=no, email=no">
+//   //         <meta name="color-scheme" content="light dark">
+//   //         <meta name="supported-color-schemes" content="light dark">
+//   //       </head>
+//   //       <body>Hello From Email</body>
+//   //       </html>
+//   //     `,
+//   //   });
+//   //   console.log(result);
+//   // } catch (error) {
+//   //   console.error(error);
+//   // } finally {
+//   //   transport.close();
+//   // }
+// }
 
 
 function html(params: { url: string; host: string; theme: Theme }) {

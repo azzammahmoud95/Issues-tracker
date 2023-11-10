@@ -1,10 +1,18 @@
 import { createTransport } from "nodemailer"
 import { Theme } from "next-auth"
 export async function CustomsendVerificationRequest(params : any) {
+  try{
   const { identifier, url, provider, theme } = params
+console.log("identifier",identifier)
+console.log("url",url);
+console.log("provier",provider);
+console.log("theme",theme)
+
+
   const { host } = new URL(url)
   // NOTE: You are not required to use `nodemailer`, use whatever you want.
-  const transport = createTransport(provider.server)
+  const transport =  createTransport(provider.server)
+  // console.log("transport",transport)
   const result = await transport.sendMail({
     to: identifier,
     from: provider.from,
@@ -12,9 +20,14 @@ export async function CustomsendVerificationRequest(params : any) {
     text: text({ url, host }),
     html: html({ url, host, theme }),
   })
+  console.log("result",result)
   const failed = result.rejected.concat(result.pending).filter(Boolean)
   if (failed.length) {
     throw new Error(`Email(s) (${failed.join(", ")}) could not be sent`)
+  }
+}
+  catch(error){
+    console.log(error)
   }
 }
 
