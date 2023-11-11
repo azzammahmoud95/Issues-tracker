@@ -23,7 +23,7 @@ const NavBar = () => {
       {/* <Container> */}
         <Flex justify="between" >
           <Flex align="center" gap="3">
-            <Link href={`/`} className="text-purple text-4xl text-pink-600">
+            <Link href={`/`} className="text-purple text-4xl text-red-600">
               <AiFillBug />{" "}
             </Link>
             <NavLinks />
@@ -49,9 +49,9 @@ const NavLinks = () => {
         <Link
           key={link.link}
           className={classnames({
-            "text-pink-600": link.link === currentPath,
+            "text-red-600": link.link === currentPath,
             "text-zinc-500": link.link !== currentPath,
-            "hover:text-pink-600 transition-colors font-medium": true,
+            "hover:text-red-600 transition-colors font-medium": true,
           })}
           href={link.link}
         >
