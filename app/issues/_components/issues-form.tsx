@@ -13,10 +13,11 @@ import { createIssueSchema } from "@/app/validation-schemas";
 import { z } from "zod";
 import ErrorMessage from "@/app/components/error-message";
 import Spinner from "@/app/components/spinner";
+import { Issue } from "@prisma/client";
 
 type IssueForm = z.infer<typeof createIssueSchema>; //========>changing interface based on schema
 
-export default function NewIssuePage() {
+export default function IssueForm({ issue }: { issue?: Issue }) {
   const router = useRouter();
   const {
     register,
@@ -27,7 +28,6 @@ export default function NewIssuePage() {
     resolver: zodResolver(createIssueSchema),
   });
 
-
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -35,14 +35,15 @@ export default function NewIssuePage() {
     try {
       setIsSubmitting(true);
       // ===> Create Issue(data);
-      
-      await axios.post("/api/issues", data);
-      router.push("/issues");
+      if (issue) axios.patch("/api/issues/" + issue.id, data);
+      else await axios.post("/api/issues", data);
+      router.push("/issues/list");
+      router.refresh();
     } catch (error) {
       setIsSubmitting(false);
       setError("An unexpected error occured..");
     }
-  })
+  });
 
   return (
     <div className="max-w-xl ">
@@ -51,12 +52,9 @@ export default function NewIssuePage() {
           <Callout.Text>{error}</Callout.Text>
         </Callout.Root>
       )}
-      <form
-        className=" space-y-3"
-        onSubmit={onSubmit}
-      >
+      <form className=" space-y-3" onSubmit={onSubmit}>
         <TextField.Root>
-          <TextField.Input placeholder="Title" {...register("title")} />
+          <TextField.Input placeholder="Title" {...register("title")} defaultValue={issue?.title}/>
         </TextField.Root>
         {/* ===> Instead of using ternary or  && oparation to display error we used optional */}
         <ErrorMessage>{errors.title?.message}</ErrorMessage>
@@ -64,13 +62,18 @@ export default function NewIssuePage() {
         <Controller
           name="description"
           control={control}
+          defaultValue={issue?.description}
           render={({ field }) => <SimpleMDE {...field} />}
         />
         {/* ===> Instead of using ternary or  && oparation to display error we used optional */}
 
         <ErrorMessage>{errors.description?.message}</ErrorMessage>
 
-        <Button disabled={isSubmitting}>Submit New Issue{isSubmitting && <Spinner />} </Button>
+        <Button disabled={isSubmitting}>
+          {" "}
+          {issue ? "Update Issue" : "Submit New Issue"}
+          {isSubmitting && <Spinner />}
+        </Button>
       </form>
     </div>
   );
