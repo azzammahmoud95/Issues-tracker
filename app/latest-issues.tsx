@@ -12,8 +12,8 @@ const LatestIssues = async () => {
     },
   });
   return (
-    <Card>
-      <Heading size={`4`} mb={`5`}>
+    <Card >
+      <Heading size={`4`} mb={`5`}  className="px-2 pt-2">
         Latest Issues
       </Heading>
       <Table.Root>
@@ -32,6 +32,7 @@ const LatestIssues = async () => {
                       fallback="?"
                       size="2"
                       radius="full"
+                      title={issue.assignedToUser.email|| ''}
                     />
                   )}
                 </Flex>
