@@ -40,7 +40,7 @@ const NavLinks = () => {
   const currentPath = usePathname();
   const links: { label: string; link: string }[] = [
     { label: "Dashboard", link: "/" },
-    { label: "Issues", link: "/issues" },
+    { label: "Issues", link: "/issues/list" },
   ];
 
   return (
