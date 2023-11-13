@@ -1,13 +1,13 @@
-import type { NextAuthOptions,Theme } from "next-auth";
+import type { NextAuthOptions,Session,Theme } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import { GithubProfile } from "next-auth/providers/github";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import prisma from "@/prisma/client";
 import GoogleProvider from "next-auth/providers/google";
 import { randomBytes, randomUUID } from "crypto";
 import nodemailer from "nodemailer";
 import EmailProvider from "next-auth/providers/email";
-import { CustomsendVerificationRequest } from "./signinemail";
+import { JWT } from "next-auth/jwt";
+// import { CustomsendVerificationRequest } from "./signinemail";
 interface SendVerificationRequestParams {
     identifier: string;
     url: string;
@@ -42,28 +42,43 @@ export const options: NextAuthOptions = {
       
       sendVerificationRequest({ identifier, url, provider,theme }) {
         // console.log('helloooooooooo',{identifier,url,provider})
-        CustomsendVerificationRequest({ identifier, url, provider });
+        // CustomsendVerificationRequest({ identifier, url, provider });
       },
     }),
   ],
   
 debug: true,
   session: {
-    strategy: "database", // => jwt or database
+    strategy: "jwt", // => jwt or database
     maxAge: 30 * 24 * 60 * 60, // 30 days
     updateAge: 24 * 60 * 60, // 24 hours
     generateSessionToken: () => {
       return randomUUID?.() ?? randomBytes(32).toString("hex");
     },
   },
-  // callbacks:{
-  //   async session({ session, token }) {
-     
+    callbacks:{
+      async jwt({ token, user, account,profile }) {
+        // Persist the OAuth access_token and or the user id to the token right after signin
+        console.log("jwt:token",token);
+        console.log("jwt:account",account);
+        console.log("jwt:user",user)
+        console.log("jwt:profile",profile);
+        // token.email = user.email;
+        if(user) {
+          token.firstname = profile?.given_name;
+        }
+        return token
+      },
+      async session({ session, token }) {
+      console.log("token",token)
+      console.log("sessionauth",session);
+        // session.user.email = token.email;
+        // Add the firstname from the token
+        session.user.firstname = token.firstname
+        return session
+      }
 
-  //     return session
-  //   }
-
-  // }
+  }
 };
 
 // async function sendRequest({ identifier, url, provider }: SendVerificationRequestParams) {

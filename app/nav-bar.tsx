@@ -1,7 +1,7 @@
 "use client";
 
 import { signOut } from "next-auth/react";
-import Skeleton  from "@/app/components/Skeleton";
+import Skeleton from "@/app/components/Skeleton";
 import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -9,6 +9,7 @@ import { AiFillBug } from "react-icons/ai";
 import classnames from "classnames";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import {
   Avatar,
   Box,
@@ -22,17 +23,17 @@ const NavBar = () => {
   return (
     <nav className="border-b mb-5 px-5  py-3 ">
       {/* <Container> */}
-        <Flex justify="between" >
-          <Flex align="center" gap="3">
-            <Link href={`/`} className="text-purple text-4xl text-red-600">
-              {/* <AiFillBug />{" "} */}
-              <Image src={`/logo.png`} width={50} height={50} alt="logo"/>
-            </Link>
-            <NavLinks />
-          </Flex>
-          <AuthStatus />
-          {/* <p>s</p> */}
+      <Flex justify="between">
+        <Flex align="center" gap="3">
+          <Link href={`/`} className="text-purple text-4xl text-red-600">
+            {/* <AiFillBug />{" "} */}
+            <Image src={`/logo.png`} width={50} height={50} alt="logo" />
+          </Link>
+          <NavLinks />
         </Flex>
+        <AuthStatus />
+        {/* <p>s</p> */}
+      </Flex>
       {/* </Container> */}
     </nav>
   );
@@ -64,10 +65,10 @@ const NavLinks = () => {
   );
 };
 
-
 const AuthStatus = () => {
   const { status, data: session } = useSession();
-console.log("sesssion",session?.user?.email)
+  const router = useRouter()
+  console.log("sesssion", session?.user?.email);
   if (status === "loading") return <Skeleton width="3rem" />;
 
   if (status === "unauthenticated" || typeof session === "undefined")
@@ -78,7 +79,7 @@ console.log("sesssion",session?.user?.email)
     );
 
   return (
-    <Box >
+    <Box className="flex items-center">
       <DropdownMenu.Root>
         <DropdownMenu.Trigger>
           <Avatar
@@ -90,13 +91,22 @@ console.log("sesssion",session?.user?.email)
             referrerPolicy="no-referrer"
           />
         </DropdownMenu.Trigger>
-        <DropdownMenu.Content>
+        <DropdownMenu.Content className="p-1">
           <DropdownMenu.Label>
             <Text size="2">{`${session!.user!.email}`}</Text>
           </DropdownMenu.Label>
-          {/* <DropdownMenu.Item> */}
-            <Button className="w-full" onClick={() =>signOut()}>Log out</Button>
-          {/* </DropdownMenu.Item> */}
+          <DropdownMenu.Label>
+            <Button  onClick={() => router.push('/profile') } variant="outline" className="w-full ">
+              Profile
+            </Button>
+            </DropdownMenu.Label>
+            <DropdownMenu.Label>
+
+          <Button className="w-full" onClick={() => signOut()}>
+            Log out
+          </Button>
+          </DropdownMenu.Label>
+
         </DropdownMenu.Content>
       </DropdownMenu.Root>
     </Box>
