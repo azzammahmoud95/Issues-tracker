@@ -8,6 +8,7 @@ import { usePathname } from "next/navigation";
 import { AiFillBug } from "react-icons/ai";
 import classnames from "classnames";
 import { useSession } from "next-auth/react";
+import Image from "next/image";
 import {
   Avatar,
   Box,
@@ -24,7 +25,8 @@ const NavBar = () => {
         <Flex justify="between" >
           <Flex align="center" gap="3">
             <Link href={`/`} className="text-purple text-4xl text-red-600">
-              <AiFillBug />{" "}
+              {/* <AiFillBug />{" "} */}
+              <Image src={`/logo.png`} width={50} height={50} alt="logo"/>
             </Link>
             <NavLinks />
           </Flex>
@@ -70,13 +72,13 @@ console.log("sesssion",session?.user?.email)
 
   if (status === "unauthenticated" || typeof session === "undefined")
     return (
-      <Link className="nav-link" href="/api/auth/signin">
+      <Link className="nav-link flex items-center" href="/api/auth/signin">
         Login
       </Link>
     );
 
   return (
-    <Box>
+    <Box >
       <DropdownMenu.Root>
         <DropdownMenu.Trigger>
           <Avatar
