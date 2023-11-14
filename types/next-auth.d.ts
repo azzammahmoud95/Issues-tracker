@@ -11,6 +11,10 @@ declare module "next-auth" {
       testSession?: string;
       // Add more attributes from Prisma User model
       prismaUserAttribute?: string;
+      refreshTokenExpires?: number;
+      accessTokenExpires?: number;
+      emailVerified?: any;
+      refreshToken?: string;
     } & DefaultSession["user"];
   }
 
@@ -45,6 +49,7 @@ declare module "next-auth/jwt" {
     lastname?: string;
     refreshTokenExpires?: number;
     accessTokenExpires?: number;
+    emailVerified?: any;
     refreshToken?: string;
     token: string;
     exp?: number;

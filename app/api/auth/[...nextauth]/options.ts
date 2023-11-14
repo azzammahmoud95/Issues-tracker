@@ -59,22 +59,32 @@ debug: true,
     callbacks:{
       async jwt({ token, user, account,profile }) {
         // Persist the OAuth access_token and or the user id to the token right after signin
-        console.log("jwt:token",token);
-        console.log("jwt:account",account);
-        console.log("jwt:user",user)
-        console.log("jwt:profile",profile);
         // token.email = user.email;
         if(user) {
           token.firstname = profile?.given_name;
+          token.lastname = profile?.family_name;
+          token.emailVerified = profile?.email_verified;
+
+          token.accessTokenExpires = account?.expires_at;
+          token.exp = account?.expires_at;
+
+          token.refreshToken = account?.refresh_token;
+          token.refreshTokenExpires = account?.expires_at;
         }
         return token
       },
       async session({ session, token }) {
-      console.log("token",token)
-      console.log("sessionauth",session);
+     
         // session.user.email = token.email;
         // Add the firstname from the token
         session.user.firstname = token.firstname
+        session.user.emailVerified  =token.emailVerified;
+        session.user.lastname = token.lastname;
+
+        session.user.refreshToken = token.refreshToken;
+        session.user.refreshTokenExpires = token.refreshTokenExpires;
+
+        
         return session
       }
 
