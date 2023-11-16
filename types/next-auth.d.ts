@@ -5,12 +5,12 @@ import { User as PrismaUser } from "@prisma/client"; // Assuming your Prisma Use
 declare module "next-auth" {
   interface Session {
     user: {
+      userid?: string;
       firstname?: string;
       lastname?: string;
       emailVerified?: boolean;
       testSession?: string;
       // Add more attributes from Prisma User model
-      prismaUserAttribute?: string;
       refreshTokenExpires?: number;
       accessTokenExpires?: number;
       emailVerified?: any;
@@ -43,6 +43,7 @@ declare module "next-auth" {
 
 declare module "next-auth/jwt" {
   interface JWT {
+    userid?:string
     image?: string;
     email?: string;
     firstname?: string;
