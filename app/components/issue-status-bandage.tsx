@@ -18,7 +18,7 @@ const statusMap: Record<
 
 const IssueStatusBadge = ({ status }: { status: Status }) => {
   return (
-    <Badge color={statusMap[status].color}>{statusMap[status].label}</Badge>
+    <Badge size={`1`} className="w-20 flex items-center justify-center" color={statusMap[status].color}>{statusMap[status].label}</Badge>
   );
 };
 
