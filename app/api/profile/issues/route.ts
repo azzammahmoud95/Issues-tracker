@@ -1,3 +1,27 @@
+import { NextRequest, NextResponse } from "next/server";
+import { options } from "@/app/api/auth/[...nextauth]/options";
+import { getServerSession } from "next-auth";
+// Create a server-side function
+export async function GET() {
+  // Get the session using the getSession function
+  const session = await getServerSession(options);
+  // If there is no session, return an unauthorized response
+  if (!session) {
+    return new NextResponse(JSON.stringify({ message: "Unauthorized" }), {
+      status: 401,
+    });
+  }
+
+  // If there is a session, you can access the user information
+  console.log("User ID:", session.user.userid);
+  console.log("User Email:", session.user.email);
+  console.log("User Name:", session.user.name);
+
+  // Your logic for handling the authenticated user goes here
+
+  // Return a response as needed
+  return new NextResponse(JSON.stringify({ message: "Success" }));
+}
 // import { NextRequest, NextResponse } from "next/server";
 // import prisma from "@/prisma/client";
 // import { getOptions} from "@/app/api/auth/[...nextauth]/route"
