@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { options } from "@/app/api/auth/[...nextauth]/options";
 import { getServerSession } from "next-auth";
-import { Issue } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 import prisma from "@/prisma/client";
+
 // Create a server-side function
 export async function GET() {
   // Get the session using the getSession function
@@ -13,7 +14,11 @@ export async function GET() {
       status: 401,
     });
   }
-  const allIssues = await prisma.issue.findMany({
+
+  // Retrieve counts for each status in a single query
+  const issuesByStatus = await prisma.issue.groupBy({
+    by: ["status"],
+    _count: true,
     where: {
       assignedToUserId: session.user.userid,
       status: {
@@ -21,23 +26,23 @@ export async function GET() {
       },
     },
   });
-
-  
-  const issuesByStatus: {
-    OPEN: Issue[];
-    IN_PROGRESS: Issue[];
-    CLOSED: Issue[];
-  } = {
-    OPEN: [],
-    IN_PROGRESS: [],
-    CLOSED: [],
+console.log(issuesByStatus)
+  // Create an object with all statuses and initialize counts to 0
+  const result: Record<string, number> = {
+    OPEN: 0,
+    IN_PROGRESS: 0,
+    CLOSED: 0,
   };
-  // ==> Filtering status and push them inside the object depending on status
-  allIssues.forEach((issue) => {
-    issuesByStatus[issue.status].push(issue);
+
+  // Update counts based on the results
+  issuesByStatus.forEach((count) => {
+    result[count.status as keyof typeof result] = count._count || 0;
   });
 
-  return new Response(
-    JSON.stringify({ status: 200, message: issuesByStatus })
+  console.log(result);
+
+  // Return the counts as a response
+  return new NextResponse(
+    JSON.stringify({ status: 200, message: result })
   );
 }

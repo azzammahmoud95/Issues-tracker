@@ -69,9 +69,9 @@ export const options: NextAuthOptions = {
 
         token.refreshToken = account?.refresh_token;
         token.refreshTokenExpires = account?.expires_at;
-        console.log("JWT,USER", user);
-        console.log("JWT,ACCOUNT", account);
-        console.log("JWT,PROFILE", profile);
+        // console.log("JWT,USER", user);
+        // console.log("JWT,ACCOUNT", account);
+        // console.log("JWT,PROFILE", profile);
       }
       return token;
     },

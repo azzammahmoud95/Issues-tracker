@@ -4,12 +4,35 @@ import { Box, Card,Grid,Flex, Avatar } from "@radix-ui/themes";
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
 import IssueSummary from "../issue-summary";
-import prisma from "@/prisma/client";
+import { useEffect, useState } from "react";
 function ProfilePage() {
   const { data: session, status } = useSession();
-  console.log("profile session", session);
-  if (status === "unauthenticated") redirect("/api/auth/signin");
+  const [issues, setIssues] = useState({OPEN: 0,IN_PROGRESS:0,CLOSED:0});
 
+  console.log("profile session", session);
+  // if (status === "unauthenticated") redirect("/api/auth/signin");
+   useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch("/api/profile/issuesnum");
+        if (response.ok) {
+          const data = await response.json();
+          setIssues(data.message);
+          console.log("Updated issues:", data.message); 
+        } else {
+          console.error(
+            "Failed to fetch issues:",
+            response.status,
+            response.statusText
+          );
+        }
+      } catch (error) {
+        console.error("Error fetching issues:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
 
   return (
@@ -40,9 +63,9 @@ function ProfilePage() {
       </div>
       <div className="w-2/5">
             <IssueSummary
-              open={12}
-              inProgress={5}
-              closed={6}
+              open={issues.OPEN || 0}
+              inProgress={issues.IN_PROGRESS || 0}
+              closed={issues.CLOSED || 0}
             />
             
       </div>

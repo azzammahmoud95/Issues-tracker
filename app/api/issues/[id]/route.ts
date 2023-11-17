@@ -7,11 +7,11 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   try {
-    console.log(params.id);
+    // console.log(params.id);
     const issue = await prisma.issue.findUnique({
       where: { id: parseInt(params.id) },
     });
-    console.log(issue);
+    // console.log(issue);
 
     if (!issue) {
       return new Response(JSON.stringify({ message: "Invalid Id" }), {
@@ -84,7 +84,7 @@ export async function PATCH(
         assignedToUserId: assignedToUserId,
       },
     });
-    console.log(updatedIssue)
+    // console.log(updatedIssue)
     return new Response(JSON.stringify(updatedIssue));
   } catch (error) {
     console.log(error);
