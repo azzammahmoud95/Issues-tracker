@@ -10,7 +10,7 @@ export interface IssueQuery {
   page: string;
 }
 interface Props {
-  searchParams: IssueQuery;
+  searchParams?: IssueQuery;
   issue: Issue[];
 }
 function IssuesTable({ searchParams, issue }: Props) {
@@ -19,14 +19,14 @@ function IssuesTable({ searchParams, issue }: Props) {
       <Table.Header>
         <Table.Row>
           {columns.map((column) => (
-            <Table.ColumnHeaderCell key={column.value} className={column.className}>
+            <Table.ColumnHeaderCell key={column.label} className={column.className}>
                 <NextLink href={{
                     query: {
                         ...searchParams,
                         orderBy: column.value
                     }
                 }}>{column.label}</NextLink>
-                {column.value === searchParams.orderBy && (
+                {column.value === searchParams?.orderBy && (
                     <AiOutlineArrowUp className="inline"/>
                 )}
             </Table.ColumnHeaderCell>
@@ -48,7 +48,7 @@ function IssuesTable({ searchParams, issue }: Props) {
                 <IssueStatusBadge status={issue.status} />
               </Table.Cell>
               <Table.Cell className="hidden md:table-cell">
-                {issue.createdAt.toDateString()}
+              {issue.createdAt instanceof Date ? issue.createdAt.toDateString(): 'N/A'}
               </Table.Cell>
             </Table.Row>
         ))}
@@ -74,6 +74,11 @@ const columns: {
     value: "createdAt",
     className: "hidden md:table-cell",
   },
+  {
+    label:"State",
+    value:'status',
+    className: "hidden md:table-cell",
+  }
 ];
 export const columnsNames = columns.map(columns => columns.value)
 export default IssuesTable;
