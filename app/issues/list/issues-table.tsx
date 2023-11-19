@@ -8,18 +8,21 @@ export interface IssueQuery {
   status: Status;
   orderBy: keyof Issue;
   page: string;
+  
 }
 interface Props {
   searchParams?: IssueQuery;
   issue: Issue[];
+
 }
 function IssuesTable({ searchParams, issue }: Props) {
+
   return (
-    <Table.Root variant="surface">
+    <Table.Root variant="surface" className="">
       <Table.Header>
         <Table.Row>
           {columns.map((column) => (
-            <Table.ColumnHeaderCell key={column.label} className={column.className}>
+            <Table.ColumnHeaderCell justify={'center'}  key={column.label} className={column.className}>
                 <NextLink href={{
                     query: {
                         ...searchParams,
@@ -36,7 +39,7 @@ function IssuesTable({ searchParams, issue }: Props) {
       <Table.Body>
         {issue.map(issue => (
             <Table.Row key={issue.id}>
-                <Table.Cell>
+                <Table.Cell justify={'center'} >
                     <Link href={`/issues/${issue.id}`}>
                         {issue.title}
                     </Link>
@@ -44,12 +47,15 @@ function IssuesTable({ searchParams, issue }: Props) {
                         <IssueStatusBadge status={issue.status}/>
                     </div>
                 </Table.Cell>
-                <Table.Cell className="hidden md:table-cell">
+                <Table.Cell justify={'center'}  className="hidden md:table-cell">
                 <IssueStatusBadge status={issue.status} />
               </Table.Cell>
-              <Table.Cell className="hidden md:table-cell">
+              <Table.Cell justify={'center'} className="hidden md:table-cell">
               {issue.createdAt instanceof Date ? issue.createdAt.toDateString(): 'N/A'}
               </Table.Cell>
+              {/* <Table.Cell justify={'center'}  className="hidden md:table-cell ">
+                <IssuesStatusToggle issueProps={issue}/>
+              </Table.Cell> */}
             </Table.Row>
         ))}
       </Table.Body>
@@ -74,11 +80,11 @@ const columns: {
     value: "createdAt",
     className: "hidden md:table-cell",
   },
-  {
-    label:"State",
-    value:'status',
-    className: "hidden md:table-cell",
-  }
+  // {
+  //   label:"State",
+  //   value:'status',
+  //   className: "hidden md:table-cell",
+  // }
 ];
 export const columnsNames = columns.map(columns => columns.value)
 export default IssuesTable;

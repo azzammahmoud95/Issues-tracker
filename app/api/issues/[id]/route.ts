@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/prisma/client";
-import { createIssueSchema } from "@/app/validation-schemas";
+import { createIssueSchema, patchIssueSchema } from "@/app/validation-schemas";
 
 export async function GET(
   req: NextRequest,
@@ -57,7 +57,7 @@ export async function PATCH(
     //   if (!session) return NextResponse.json({}, { status: 401 });
     const body = await request.json();
     // Validate the request body
-    const validation = createIssueSchema.safeParse(body);
+    const validation = patchIssueSchema.safeParse(body);
     if (!validation.success) {
       return NextResponse.json(validation.error.format(), { status: 400 });
     }
@@ -82,7 +82,7 @@ export async function PATCH(
         title:title,
         description:description,
         assignedToUserId: assignedToUserId,
-        status: status
+        status:status
       },
     });
     // console.log(updatedIssue)

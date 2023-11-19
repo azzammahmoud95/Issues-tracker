@@ -7,6 +7,7 @@ import IssueChart from "../issues-charts";
 import IssueSummary from "../issue-summary";
 import { useEffect, useState } from "react";
 import IssuesTable from "../issues/list/issues-table";
+import IssueProfileTable from "./issue-profile-table";
 function ProfilePage() {
   const { data: session, status } = useSession();
   const [issuesCount, setIssuesCount] = useState({
@@ -15,7 +16,6 @@ function ProfilePage() {
     CLOSED: 0,
   });
   const [issuesData, setIssuesData] = useState([]);
-  console.log("profile session", session);
   // if (status === "unauthenticated") redirect("/api/auth/signin");
   useEffect(() => {
     const fetchData = async () => {
@@ -98,7 +98,7 @@ console.log("issuesData",issuesData)
         inProgress={issuesCount.IN_PROGRESS || 0}
         closed={issuesCount.CLOSED || 0}
       />
-      <IssuesTable issue={issuesData} />
+      <IssueProfileTable issue={issuesData} />
     </>
   );
 }
