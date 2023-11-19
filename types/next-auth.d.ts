@@ -11,6 +11,9 @@ declare module "next-auth" {
       emailVerified?: boolean;
       testSession?: string;
       // Add more attributes from Prisma User model
+
+      role?:string;
+
       refreshTokenExpires?: number;
       accessTokenExpires?: number;
       emailVerified?: any;
@@ -22,6 +25,7 @@ declare module "next-auth" {
     // Add more attributes from Prisma User model
     prismaUserAttribute?: string;
     testuser?: string;
+    role?: string;
   }
   interface Profile {
     iss?: string,
@@ -57,5 +61,6 @@ declare module "next-auth/jwt" {
     iat?: number;
     jti?: string;
     testJWT?: string;
+    role?:string;
   }
 }

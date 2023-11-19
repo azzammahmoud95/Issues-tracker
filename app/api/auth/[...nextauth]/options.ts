@@ -64,6 +64,8 @@ export const options: NextAuthOptions = {
         token.lastname = profile?.family_name;
         token.emailVerified = profile?.email_verified;
 
+        token.role = user.role;
+
         token.accessTokenExpires = account?.expires_at;
         token.exp = account?.expires_at;
 
@@ -82,6 +84,8 @@ export const options: NextAuthOptions = {
       session.user.firstname = token.firstname;
       session.user.emailVerified = token.emailVerified;
       session.user.lastname = token.lastname;
+
+      session.user.role = token.role
 
       session.user.refreshToken = token.refreshToken;
       session.user.refreshTokenExpires = token.refreshTokenExpires;

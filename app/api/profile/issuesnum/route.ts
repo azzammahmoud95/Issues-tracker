@@ -39,7 +39,6 @@ console.log(issuesByStatus)
     result[count.status as keyof typeof result] = count._count || 0;
   });
 
-  console.log(result);
 
   // Return the counts as a response
   return new NextResponse(
