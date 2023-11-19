@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { options } from "@/app/api/auth/[...nextauth]/options";
 import { getServerSession } from "next-auth";
-import { Issue } from "@prisma/client";
 import prisma from "@/prisma/client";
 export async function GET() {
   const session = await getServerSession(options);
@@ -15,7 +14,6 @@ export async function GET() {
       assignedToUserId: session.user.userid,
     },
   });
-console.log("allissues",allIssuesProfile)
   
   // const issuesByStatus: {
   //   OPEN: Issue[];

@@ -3,58 +3,43 @@
 import { Issue, Status } from "@prisma/client";
 import { Table, Select } from "@radix-ui/themes";
 import Link from "next/link";
-import NextLink from "next/link";
-import { AiOutlineArrowUp } from "react-icons/ai";
 import IssueStatusBadge from "@/app/components/issue-status-bandage";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import axios from "axios";
 interface Props {
   issue: Issue[];
+  updateData: boolean;
+  setUpdateData: React.Dispatch<React.SetStateAction<boolean>>;
 }
 const statuses: { label: string; value?: Status }[] = [
   { label: "Open", value: "OPEN" },
   { label: "In Progress", value: "IN_PROGRESS" },
   { label: "Closed", value: "CLOSED" },
 ];
-function IssueProfileTable({ issue }: Props) {
+function IssueProfileTable({ issue, setUpdateData, updateData }: Props) {
   const [selectedIssue, setSelectedIssue] = useState<Issue>();
-  // console.log("selectedIssue",selectedIssue.id)
-//   useEffect(() => {
-//     const fetchData = async () => {
-//       try {
-//         const responseIssues = await axios.patch(
-//           "/api/issues/" + selectedIssue?.id,
-//           selectedIssue
-//         );
 
-//         if (responseIssues) {
-//           console.log("Updated issuesData:", responseIssues);
-//         } else {
-//           console.error("Failed to fetch issuesData:", responseIssues);
-//         }
-//       } catch (error) {
-//         console.error("Error fetching data:", error);
-//       }
-//     };
-
-//     if (selectedIssue) {
-//       fetchData();
-//     }
-//   }, [selectedIssue]);
-const handleStatusChange =async (value:Status | undefined, issueId:number) => {
-try {
-    const response = await axios.patch(`/api/issues/${issueId}`,{status:value});
-    if(response){
+  const handleStatusChange = async (
+    value: Status | undefined,
+    issueId: number
+  ) => {
+    try {
+      const response = await axios.put(`/api/status/${issueId}`, {
+        status: value,
+      });
+      if (response) {
         console.log(response.data);
-    }
-    else {
+        setUpdateData(!updateData); // to fetch the data again when updating
+      } else {
         console.error("Failed to update issue:", response);
       }
-} catch (error) {
-    console.error("Error updating issue:", error);
-
-}    
-}
+    } catch (error) {
+      console.error("Error updating issue:", error);
+    }
+    // finally{
+    //   setUpdateData(false)
+    // }
+  };
   return (
     <Table.Root variant="surface" className="">
       <Table.Header>
@@ -95,7 +80,7 @@ try {
                     handleStatusChange(value as Status, issue.id);
                   }}
                 >
-                  <Select.Trigger placeholder={"s"} />
+                  <Select.Trigger placeholder={issue.status} />
                   <Select.Content>
                     {statuses.map((status) => (
                       <Select.Item

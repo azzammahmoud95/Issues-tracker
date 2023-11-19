@@ -16,46 +16,47 @@ function ProfilePage() {
     CLOSED: 0,
   });
   const [issuesData, setIssuesData] = useState([]);
+  const [updateData,setUpdateData] = useState(false)
   // if (status === "unauthenticated") redirect("/api/auth/signin");
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const responseCount = await fetch("/api/profile/issuesnum");
-        if (responseCount.ok) {
-          const dataCount = await responseCount.json();
-          setIssuesCount(dataCount.message);
-          console.log("Updated issuesCount:", dataCount.message);
-        } else {
-          console.error(
-            "Failed to fetch issuesCount:",
-            responseCount.status,
-            responseCount.statusText
-          );
-        }
-      } catch (error) {
-        console.error("Error fetching issuesCount:", error);
-      }
-      try {
-        const responseIssues = await fetch("/api/profile/issues");
-        if (responseIssues.ok) {
-          const issuesData = await responseIssues.json();
-          setIssuesData(issuesData.message);
-          console.log("Updated issuesData:", issuesData.message);
-        } else {
-          console.error(
-            "Failed to fetch issuesData:",
-            responseIssues.status,
-            responseIssues.statusText
-          );
-        }
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
 
+  const fetchData = async () => {
+    try {
+      const responseCount = await fetch("/api/profile/issuesnum");
+      if (responseCount.ok) {
+
+        const dataCount = await responseCount.json();
+        setIssuesCount(dataCount.message);
+        console.log("Updated issuesCount:", dataCount.message);
+      } else {
+        console.error(
+          "Failed to fetch issuesCount:",
+          responseCount.status,
+          responseCount.statusText
+        );
+      }
+    } catch (error) {
+      console.error("Error fetching issuesCount:", error);
+    }
+    try {
+      const responseIssues = await fetch("/api/profile/issues");
+      if (responseIssues.ok) {
+        const issuesData = await responseIssues.json();
+        setIssuesData(issuesData.message);
+        console.log("Updated issuesData:", issuesData.message);
+      } else {
+        console.error(
+          "Failed to fetch issuesData:",
+          responseIssues.status,
+          responseIssues.statusText
+        );
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+  useEffect(() => {
     fetchData();
-  }, []);
-console.log("issuesData",issuesData)
+  }, [updateData]);
   return (
     <>
       <div className="p-10 flex justify-between border rounded-lg">
@@ -98,7 +99,7 @@ console.log("issuesData",issuesData)
         inProgress={issuesCount.IN_PROGRESS || 0}
         closed={issuesCount.CLOSED || 0}
       />
-      <IssueProfileTable issue={issuesData} />
+      <IssueProfileTable issue={issuesData} updateData={updateData} setUpdateData={setUpdateData}/>
     </>
   );
 }
