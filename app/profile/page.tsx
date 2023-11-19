@@ -6,9 +6,10 @@ import { redirect } from "next/navigation";
 import IssueChart from "../issues-charts";
 import IssueSummary from "../issue-summary";
 import { useEffect, useState } from "react";
-import IssuesTable from "../issues/list/issues-table";
 import IssueProfileTable from "./issue-profile-table";
+import { Metadata } from "next";
 function ProfilePage() {
+
   const { data: session, status } = useSession();
   const [issuesCount, setIssuesCount] = useState({
     OPEN: 0,
@@ -59,6 +60,7 @@ function ProfilePage() {
   }, [updateData]);
   return (
     <>
+    
       <div className="p-10 flex justify-between border rounded-lg">
         <Avatar
           src={session?.user.image || ""}
@@ -78,7 +80,7 @@ function ProfilePage() {
             <strong>Email:</strong> {session?.user.email}
           </p>
           <p className="text-lg">
-            <strong>Role: </strong>Role{" "}
+            <strong>Role: </strong>{session?.user.role}
           </p>
           <p className="text-lg">
             <strong>Total issues: </strong>
@@ -102,6 +104,7 @@ function ProfilePage() {
       <IssueProfileTable issue={issuesData} updateData={updateData} setUpdateData={setUpdateData}/>
     </>
   );
+  
 }
 
 export default ProfilePage;
